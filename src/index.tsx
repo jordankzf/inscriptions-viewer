@@ -1,15 +1,38 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import Main from './screens/Main';
+import Detail from './screens/Detail';
+import { ThemeProvider } from 'styled-components';
+import Theme from './theme';
+import GlobalStyle from './theme/global';
+
+const router = createBrowserRouter([
+  {
+    path: "/:address",
+    element: <Main />,
+  },
+  {
+    path: "/",
+    element: <Main />,
+  },
+  {
+    path: "/detail/:address/:id",
+    element: <Detail />,
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <App />
+    <GlobalStyle />                  <ThemeProvider theme={Theme}>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </React.StrictMode>
 );
 
