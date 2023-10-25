@@ -115,7 +115,7 @@ export default function Main() {
       <SectionContainer>
         <label htmlFor="address">Owner Bitcoin Address:</label>
         <TextField value={address} onChange={(e) => setAddress(e.target.value)} type="text" id="address" />
-        <LookUpButton disabled={!address || address.trim() === ""} onClick={() => navigate(`/${address}`)}>Look up</LookUpButton>
+        <LookUpButton disabled={!address || address.trim() === ""} onClick={() => { navigate(`/${address}`); fetchOrdinalUtxo(address); }}>Look up</LookUpButton>
       </SectionContainer>
       {error && <ErrorMessage>{error}</ErrorMessage>}
       {loading && <Loader />}

@@ -21,6 +21,7 @@ const GlobalStyle = createGlobalStyle`
     @media (min-width: 768px) {
       margin: 0 30%;
     }
+    overflow-x: hidden;
   }
 `;
 

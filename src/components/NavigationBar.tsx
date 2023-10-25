@@ -14,6 +14,7 @@ const LeftCaret = styled.img(() => ({
   rotate: '180deg',
   position: 'absolute',
   left: '32px',
+  cursor: 'pointer'
 })
 );
 

@@ -25,8 +25,8 @@ const LoadMoreButton = styled.button((props) => ({
     width: '33%',
 }));
 
-function trimToEightChars(str: string) {
-    return str.substring(0, 8);
+function trimToChars(str: string, numberOfChars: number = 8) {
+    return str.substring(0, numberOfChars);
 }
 
 export function InscriptionsList({ inscriptions, handleLoadMore, showLoadMore, navigate, walletAddress }: { inscriptions: Array<InscriptionsI>, handleLoadMore: () => void, showLoadMore: boolean, navigate: (path: string) => void, walletAddress: string }) {
@@ -35,7 +35,7 @@ export function InscriptionsList({ inscriptions, handleLoadMore, showLoadMore, n
             <label>Results</label>
             {inscriptions?.map(({ id }) => (
                 <div onClick={() => navigate(`/detail/${walletAddress}/${id}`)} key={id}>
-                    <InscriptionRow><span>Inscription {trimToEightChars(id)}</span>
+                    <InscriptionRow><span>Inscription {trimToChars(id)}</span>
                         <RightCaret alt="back" src={ArrowRight} />
                     </InscriptionRow>
                 </div>
