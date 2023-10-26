@@ -21,8 +21,9 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test:unit": "react-scripts test --watchAll=false",
+    "test:i9n": "playwright test --ui",
+    "test": "react-scripts test --watchAll=false && playwright test"
   },
   "eslintConfig": {
     "extends": [
@@ -40,6 +41,14 @@
       "last 1 chrome version",
       "last 1 firefox version",
       "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.39.0"
+  },
+  "jest": {
+    "testMatch": [
+      "**/tests/*.unit.ts?(x)"
     ]
   }
 }

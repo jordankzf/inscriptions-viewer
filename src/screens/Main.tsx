@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from '../components/Loader';
 import { InscriptionsI, InscriptionsList } from '../components/InscriptionsList';
 import { SectionContainer } from '../components/SectionContainer';
+import ErrorMessage from '../components/ErrorMessage';
 
 const TextField = styled.input((props) => ({
   background: props.theme.colors.grey,
@@ -17,11 +18,6 @@ const TextField = styled.input((props) => ({
 const LookUpButton = styled.button((props) => ({
   ...props.theme.button,
 }));
-
-const ErrorMessage = styled.div((props) => ({
-  color: 'red'
-}));
-
 
 interface OrdinalUtxoResponse {
   limit: number;
@@ -109,15 +105,20 @@ export default function Main() {
     fetchOrdinalUtxo(address, page + 1);
   };
 
+  const handleLookUp = () => {
+    navigate(`/${address}`);
+    // fetchOrdinalUtxo(address);
+  }
+
   return (
     <div>
       <NavigationBar title="Ordinals Inscription Lookup" />
       <SectionContainer>
         <label htmlFor="address">Owner Bitcoin Address:</label>
-        <TextField value={address} onChange={(e) => setAddress(e.target.value)} type="text" id="address" />
-        <LookUpButton disabled={!address || address.trim() === ""} onClick={() => { navigate(`/${address}`); fetchOrdinalUtxo(address); }}>Look up</LookUpButton>
+        <TextField onKeyDown={handleLookUp} value={address} onChange={(e) => setAddress(e.target.value)} type="text" id="address" />
+        <LookUpButton disabled={!address || address.trim() === "" || loading} onClick={handleLookUp} >Look up</LookUpButton>
       </SectionContainer>
-      {error && <ErrorMessage>{error}</ErrorMessage>}
+      {error && <ErrorMessage data-testid="error-message">{error}</ErrorMessage>}
       {loading && <Loader />}
       {inscriptions && <InscriptionsList walletAddress={address} showLoadMore={showLoadMore} inscriptions={inscriptions} handleLoadMore={handleLoadMore} navigate={navigate} />}
     </div>

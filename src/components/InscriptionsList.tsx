@@ -31,7 +31,7 @@ function trimToChars(str: string, numberOfChars: number = 8) {
 
 export function InscriptionsList({ inscriptions, handleLoadMore, showLoadMore, navigate, walletAddress }: { inscriptions: Array<InscriptionsI>, handleLoadMore: () => void, showLoadMore: boolean, navigate: (path: string) => void, walletAddress: string }) {
     return (<>
-        {inscriptions && <SectionContainer>
+        {inscriptions && <SectionContainer data-testid="inscriptions-list">
             <label>Results</label>
             {inscriptions?.map(({ id }) => (
                 <div onClick={() => navigate(`/detail/${walletAddress}/${id}`)} key={id}>

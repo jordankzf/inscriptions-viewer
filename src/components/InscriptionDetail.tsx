@@ -104,10 +104,12 @@ export function InscriptionDetail({ data: { id, number, address, genesis_tx_id, 
             <ContentWrapper>
                 <InscriptionContent contentType={content_type} id={id} />
             </ContentWrapper>
+
             <HeaderText>Inscription {number}</HeaderText>
             <LineBreak />
             <KeyValuePair keyString="Inscription ID" value={id} shaded={false} />
             <KeyValuePair keyString="Owner Address" value={address} shaded={false} />
+
             <HeaderText>Attributes</HeaderText>
             <KeyValuePair keyString="Output Value" value={value.toString()} />
             <KeyValuePair keyString="Content Type" value={content_type.split(";")[0]} />
