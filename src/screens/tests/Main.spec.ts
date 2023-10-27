@@ -6,7 +6,7 @@ test.describe("Main Page", () => {
 
   const validAddressUrlRegex = new RegExp(`^.+\\/${VALID_ADDRESS}$`);
 
-  async function lookUpValidAddress({
+  const lookUpValidAddress = async ({
     page,
     clickButton = true,
     address = VALID_ADDRESS,
@@ -14,12 +14,19 @@ test.describe("Main Page", () => {
     page: Page;
     clickButton?: boolean;
     address?: string;
-  }) {
+  }) => {
     const inputField = page.locator("#address");
     const button = page.locator("button");
     await inputField.fill(address);
     clickButton && (await button.click());
-  }
+  };
+
+  const waitForApiResponse = async (
+    page: Page,
+    endpoint = "https://api-3.xverse.app/v1/address/"
+  ) => {
+    await page.waitForResponse((resp) => resp.url().includes(endpoint));
+  };
 
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
@@ -110,21 +117,39 @@ test.describe("Main Page", () => {
     );
   });
 
+  test("should display error message when looking up invalid address", async ({
+    page,
+  }) => {
+    await lookUpValidAddress({ page, address: "i am not a real address" });
+
+    const errorMessage = page.getByTestId("error-message");
+    await expect(errorMessage).toHaveText(
+      "Request failed with status code 400"
+    );
+  });
+
   test("should display more inscriptions when load more button is clicked", async ({
     page,
   }) => {
     await lookUpValidAddress({ page });
 
-    const loadMoreButton = page.getByText("Load more");
-    await loadMoreButton.click();
-    const inscriptionsList = page
+    const loadMoreButton = await page.getByText("Load more");
+    const inscriptionsList = await page
       .getByTestId("inscriptions-list")
-      .locator("div");
+      .locator("span");
+
+    await waitForApiResponse(page);
+    await expect(await inscriptionsList.count()).toBe(30);
 
     // Will be flaky with an active wallet
     // Consider using an untouched wallet or mock the returned data
-    await expect(await inscriptionsList.count()).toBeGreaterThanOrEqual(47);
+    await loadMoreButton.click();
+    await waitForApiResponse(page);
+
     await expect(loadMoreButton).not.toBeVisible();
+    // Some results return an empty inscriptions array
+    // They aren't ordinals - so what are they?
+    await expect(await inscriptionsList.count()).toBeGreaterThanOrEqual(44);
   });
 
   test("should navigate to /detail/:address/:inscriptionId when an inscription is clicked", async ({

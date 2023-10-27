@@ -110,12 +110,18 @@ export default function Main() {
     // fetchOrdinalUtxo(address);
   }
 
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleLookUp();
+    }
+  };
+
   return (
     <div>
       <NavigationBar title="Ordinals Inscription Lookup" />
       <SectionContainer>
         <label htmlFor="address">Owner Bitcoin Address:</label>
-        <TextField onKeyDown={handleLookUp} value={address} onChange={(e) => setAddress(e.target.value)} type="text" id="address" />
+        <TextField onKeyDown={handleKeyDown} value={address} onChange={(e) => setAddress(e.target.value)} type="text" id="address" />
         <LookUpButton disabled={!address || address.trim() === "" || loading} onClick={handleLookUp} >Look up</LookUpButton>
       </SectionContainer>
       {error && <ErrorMessage data-testid="error-message">{error}</ErrorMessage>}
