@@ -23,7 +23,7 @@ test.describe("Main Page", () => {
 
   const waitForApiResponse = async (
     page: Page,
-    endpoint = "https://api-3.xverse.app/v1/address/"
+    endpoint = "https://api-3.xverse.app/v1/address/",
   ) => {
     await page.waitForResponse((resp) => resp.url().includes(endpoint));
   };
@@ -113,7 +113,7 @@ test.describe("Main Page", () => {
 
     const errorMessage = page.getByTestId("error-message");
     await expect(errorMessage).toHaveText(
-      "Request path contains unescaped characters"
+      "Request path contains unescaped characters",
     );
   });
 
@@ -124,7 +124,7 @@ test.describe("Main Page", () => {
 
     const errorMessage = page.getByTestId("error-message");
     await expect(errorMessage).toHaveText(
-      "Request failed with status code 400"
+      "Request failed with status code 400",
     );
   });
 

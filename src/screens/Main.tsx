@@ -1,18 +1,21 @@
-import styled from 'styled-components';
-import NavigationBar from '../components/NavigationBar';
-import { useEffect, useState } from 'react';
+import styled from "styled-components";
+import NavigationBar from "../components/NavigationBar";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader } from '../components/Loader';
-import { InscriptionsI, InscriptionsList } from '../components/InscriptionsList';
-import { SectionContainer } from '../components/SectionContainer';
-import ErrorMessage from '../components/ErrorMessage';
+import { Loader } from "../components/Loader";
+import {
+  InscriptionsI,
+  InscriptionsList,
+} from "../components/InscriptionsList";
+import { SectionContainer } from "../components/SectionContainer";
+import ErrorMessage from "../components/ErrorMessage";
 
 const TextField = styled.input((props) => ({
   background: props.theme.colors.grey,
-  border: 'none',
-  outline: 'none',
-  height: '32px',
-  padding: '0 10px',
+  border: "none",
+  outline: "none",
+  height: "32px",
+  padding: "0 10px",
 }));
 
 const LookUpButton = styled.button((props) => ({
@@ -29,7 +32,7 @@ interface OrdinalUtxoResponse {
     vout: number;
     block_height: number;
     sats: any[];
-    inscriptions: InscriptionsI
+    inscriptions: InscriptionsI;
   }[];
 }
 
@@ -54,41 +57,45 @@ export default function Main() {
   const fetchOrdinalUtxo = async (address: string, nextPage?: number) => {
     try {
       if (!address) {
-        throw new Error("Address is required")
+        throw new Error("Address is required");
       }
 
       setError("");
 
       // If page is not provided, default and reset to 1
       if (!nextPage) {
-        setPage(1)
+        setPage(1);
         setLoading(true);
         setInscriptions(undefined);
       }
 
       const offset = ((nextPage ?? 1) - 1) * 30; // Change this if you want to load less than 30 at a time (default)
-      const response = await fetch(`https://api-3.xverse.app/v1/address/${address}/ordinal-utxo?offset=${offset}`);
+      const response = await fetch(
+        `https://api-3.xverse.app/v1/address/${address}/ordinal-utxo?offset=${offset}`,
+      );
       const json = await response.json();
 
       if (json.status === 400) {
-        throw new Error(json.message)
+        throw new Error(json.message);
       }
 
-      setInscriptions(prevInscriptions => {
-        const flatInscriptions = json.results.map((result: OrdinalUtxoResponse["results"][0]) => result.inscriptions).flat()
+      setInscriptions((prevInscriptions) => {
+        const flatInscriptions = json.results
+          .map(
+            (result: OrdinalUtxoResponse["results"][0]) => result.inscriptions,
+          )
+          .flat();
         if (!prevInscriptions || !nextPage) {
           return flatInscriptions;
         } else {
-          return [...prevInscriptions, ...
-            flatInscriptions];
+          return [...prevInscriptions, ...flatInscriptions];
         }
       });
 
-
-      if ((json.offset + json.limit) < json.total) {
-        setShowLoadMore(true)
+      if (json.offset + json.limit < json.total) {
+        setShowLoadMore(true);
       } else {
-        setShowLoadMore(false)
+        setShowLoadMore(false);
       }
 
       if (nextPage) {
@@ -108,10 +115,10 @@ export default function Main() {
   const handleLookUp = () => {
     navigate(`/${address}`);
     // fetchOrdinalUtxo(address);
-  }
+  };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       handleLookUp();
     }
   };
@@ -121,13 +128,33 @@ export default function Main() {
       <NavigationBar title="Ordinals Inscription Lookup" />
       <SectionContainer>
         <label htmlFor="address">Owner Bitcoin Address:</label>
-        <TextField onKeyDown={handleKeyDown} value={address} onChange={(e) => setAddress(e.target.value)} type="text" id="address" />
-        <LookUpButton disabled={!address || address.trim() === "" || loading} onClick={handleLookUp} >Look up</LookUpButton>
+        <TextField
+          onKeyDown={handleKeyDown}
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          type="text"
+          id="address"
+        />
+        <LookUpButton
+          disabled={!address || address.trim() === "" || loading}
+          onClick={handleLookUp}
+        >
+          Look up
+        </LookUpButton>
       </SectionContainer>
-      {error && <ErrorMessage data-testid="error-message">{error}</ErrorMessage>}
+      {error && (
+        <ErrorMessage data-testid="error-message">{error}</ErrorMessage>
+      )}
       {loading && <Loader />}
-      {inscriptions && <InscriptionsList walletAddress={address} showLoadMore={showLoadMore} inscriptions={inscriptions} handleLoadMore={handleLoadMore} navigate={navigate} />}
+      {inscriptions && (
+        <InscriptionsList
+          walletAddress={address}
+          showLoadMore={showLoadMore}
+          inscriptions={inscriptions}
+          handleLoadMore={handleLoadMore}
+          navigate={navigate}
+        />
+      )}
     </div>
   );
 }
-

@@ -1,7 +1,6 @@
-import { styled } from "styled-components"
-    ;
+import { styled } from "styled-components";
 const ErrorMessage = styled.div(() => ({
-    color: 'red'
+  color: "red",
 }));
 
 export default ErrorMessage;

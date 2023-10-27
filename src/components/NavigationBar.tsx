@@ -1,22 +1,21 @@
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import ArrowRight from '../assets/img/arrow_right.svg';
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import ArrowRight from "../assets/img/arrow_right.svg";
 
 const NavigationBarTitle = styled.h1(() => ({
-  textAlign: 'center',
-  paddingTop: '54px',
-  paddingBottom: '17px',
-  margin: 0
+  textAlign: "center",
+  paddingTop: "54px",
+  paddingBottom: "17px",
+  margin: 0,
 }));
 
 const LeftCaret = styled.img(() => ({
-  paddingLeft: '11px',
-  rotate: '180deg',
-  position: 'absolute',
-  left: '32px',
-  cursor: 'pointer'
-})
-);
+  paddingLeft: "11px",
+  rotate: "180deg",
+  position: "absolute",
+  left: "32px",
+  cursor: "pointer",
+}));
 
 interface NavigationBarProps {
   title: string;
@@ -31,9 +30,12 @@ function NavigationBar(props: NavigationBarProps) {
   }
 
   return (
-    <NavigationBarTitle>{props.showBackButton && <LeftCaret alt="back" src={ArrowRight} onClick={handleBackClick} />}
-      {props.title}</NavigationBarTitle>
-
+    <NavigationBarTitle>
+      {props.showBackButton && (
+        <LeftCaret alt="back" src={ArrowRight} onClick={handleBackClick} />
+      )}
+      {props.title}
+    </NavigationBarTitle>
   );
 }
 
