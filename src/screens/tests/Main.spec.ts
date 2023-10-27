@@ -21,11 +21,6 @@ test.describe("Main Page", () => {
     clickButton && (await button.click());
   };
 
-  const waitForResponse = (
-    page: Page,
-    endpoint = "https://api-3.xverse.app/v1/address/"
-  ) => page.waitForResponse((response) => response.url().includes(endpoint));
-
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
     await page.setViewportSize({ width: 375, height: 1198 });
@@ -76,15 +71,6 @@ test.describe("Main Page", () => {
     await expect(button).toBeDisabled();
   });
 
-  test("should display inscriptions list when data is fetched", async ({
-    page,
-  }) => {
-    await lookUpValidAddress({ page });
-
-    const inscriptionsList = page.getByTestId("inscriptions-list");
-    await expect(inscriptionsList).toBeVisible();
-  });
-
   test("should navigate to /:address when button is clicked with a valid address", async ({
     page,
   }) => {
@@ -131,8 +117,25 @@ test.describe("Main Page", () => {
   test("should display more inscriptions when load more button is clicked", async ({
     page,
   }) => {
+    const responsePromise = page.waitForResponse((response) =>
+      response.url().includes("https://api-3.xverse.app/v1/address/")
+    );
     await lookUpValidAddress({ page });
-    await waitForResponse(page);
+    await responsePromise;
+
+    // (HACKY): To avoid the even hackier waitForTimeout
+    // This test in particular is very flaky, due to unknown causes.
+    // Probably race conditions involving rendering since the 'Look up' button navigates to a new page
+
+    // Wait for the following:
+    // 1. URL to change
+    // 2. Loader to disappear
+    // 3. Inscriptions list to render
+    // 4. Load state to complete
+    await page.waitForURL(validAddressUrlRegex);
+    await expect(await page.getByTestId("loader-spinner")).toHaveCount(0);
+    await page.waitForSelector("[data-testid='inscriptions-list']");
+    await page.waitForLoadState("domcontentloaded");
 
     const inscriptionsList = await page
       .getByTestId("inscriptions-list")
@@ -141,9 +144,7 @@ test.describe("Main Page", () => {
     await expect(await inscriptionsList.count()).toBe(30);
 
     const loadMoreButton = await page.getByText("Load more");
-    await loadMoreButton.click();
-    await waitForResponse(page);
-
+    loadMoreButton.click();
     await expect(loadMoreButton).not.toBeVisible();
     // Some results return an empty inscriptions array
     // They aren't ordinals - so what are they?
