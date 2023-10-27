@@ -21,12 +21,10 @@ test.describe("Main Page", () => {
     clickButton && (await button.click());
   };
 
-  const waitForApiResponse = async (
+  const waitForResponse = (
     page: Page,
-    endpoint = "https://api-3.xverse.app/v1/address/",
-  ) => {
-    await page.waitForResponse((resp) => resp.url().includes(endpoint));
-  };
+    endpoint = "https://api-3.xverse.app/v1/address/"
+  ) => page.waitForResponse((response) => response.url().includes(endpoint));
 
   test.beforeEach(async ({ page }) => {
     await page.goto("/");
@@ -113,7 +111,7 @@ test.describe("Main Page", () => {
 
     const errorMessage = page.getByTestId("error-message");
     await expect(errorMessage).toHaveText(
-      "Request path contains unescaped characters",
+      "Request path contains unescaped characters"
     );
   });
 
@@ -124,27 +122,27 @@ test.describe("Main Page", () => {
 
     const errorMessage = page.getByTestId("error-message");
     await expect(errorMessage).toHaveText(
-      "Request failed with status code 400",
+      "Request failed with status code 400"
     );
   });
 
+  // Will be flaky with an active wallet
+  // Consider using an untouched wallet or mock the returned data
   test("should display more inscriptions when load more button is clicked", async ({
     page,
   }) => {
     await lookUpValidAddress({ page });
+    await waitForResponse(page);
 
-    const loadMoreButton = await page.getByText("Load more");
     const inscriptionsList = await page
       .getByTestId("inscriptions-list")
       .locator("span");
 
-    await waitForApiResponse(page);
     await expect(await inscriptionsList.count()).toBe(30);
 
-    // Will be flaky with an active wallet
-    // Consider using an untouched wallet or mock the returned data
+    const loadMoreButton = await page.getByText("Load more");
     await loadMoreButton.click();
-    await waitForApiResponse(page);
+    await waitForResponse(page);
 
     await expect(loadMoreButton).not.toBeVisible();
     // Some results return an empty inscriptions array

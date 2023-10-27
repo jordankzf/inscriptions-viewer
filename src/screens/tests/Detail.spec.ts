@@ -28,7 +28,7 @@ test.describe("Detail Page", () => {
   const navigateToInscription = async (
     page: Page,
     walletAddress: string = TEST_WALLET,
-    inscriptionId: string,
+    inscriptionId: string
   ) => {
     await page.goto(`detail/${walletAddress}/${inscriptionId}`);
   };
@@ -59,7 +59,7 @@ test.describe("Detail Page", () => {
         value: string;
       };
       text?: string;
-    },
+    }
   ) => {
     // Is locating the element via its tag and nth position "fragile"?
     // Yes, but shouldn't the order be guaranteed? If it changes, is that not a reason for the test to fail?
@@ -73,14 +73,14 @@ test.describe("Detail Page", () => {
           parentTag: "h1",
           parentText: "Details",
           followingTag: expectedContent.tag,
-        }),
+        })
       )
       .first();
 
     if (expectedContent.attribute) {
       await expect(inscriptionContent).toHaveAttribute(
         expectedContent.attribute.name,
-        expectedContent.attribute.value,
+        expectedContent.attribute.value
       );
     }
 
@@ -121,14 +121,14 @@ test.describe("Detail Page", () => {
       .locator(getSiblingElement({ parentText: "Location" }))
       .first();
     await expect(locationText).toHaveText(
-      /^[a-zA-Z0-9]{16}\.\.\.[a-zA-Z0-9]{12}:\d+:\d+$/,
+      /^[a-zA-Z0-9]{16}\.\.\.[a-zA-Z0-9]{12}:\d+:\d+$/
     );
 
     const genesisTxText = page
       .locator(getSiblingElement({ parentText: "Genesis Transaction" }))
       .first();
     await expect(genesisTxText).toHaveText(
-      /^[a-zA-Z0-9]{16}\.\.\.[a-zA-Z0-9]{16}$/,
+      /^[a-zA-Z0-9]{16}\.\.\.[a-zA-Z0-9]{16}$/
     );
 
     const contentTypeText = page
@@ -263,7 +263,7 @@ test.describe("Detail Page", () => {
     const errorMessage = page.getByTestId("error-message");
     // the endpoint returns a 400 as the statusCode, but the error message states it's 500 lol
     await expect(errorMessage).toHaveText(
-      "Request failed with status code 500",
+      "Request failed with status code 500"
     );
   });
 
@@ -277,14 +277,14 @@ test.describe("Detail Page", () => {
     await expect(errorMessage).toBeVisible();
   });
 
-  // xverse's api doesn't seem to care if the wallet address provided is wrong
-  //   test("should display an error for a non-existing wallet", async ({
-  //     page,
-  //   }) => {
-  //     await navigateToInscription(page, "made up wallet", TEXT_INSCRIPTION);
-  //     const errorMessage = page.getByTestId("error-message");
-  //     await expect(errorMessage).toHaveText(
-  //       "Request failed with status code 500"
-  //     );
-  //   });
+  //xverse's api doesn't seem to care if the wallet address provided is wrong
+  test.skip("should display an error for a non-existing wallet", async ({
+    page,
+  }) => {
+    await navigateToInscription(page, "made up wallet", TEXT_INSCRIPTION);
+    const errorMessage = page.getByTestId("error-message");
+    await expect(errorMessage).toHaveText(
+      "Request failed with status code 500"
+    );
+  });
 });

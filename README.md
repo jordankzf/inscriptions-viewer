@@ -2,12 +2,11 @@
 
 Inscriptions Viewer is a React web app that allows you to see what inscriptions any Bitcoin wallet owns.
 
-<img src="/screenshots/main.png" alt="Main screenshot" width="742"/>
-<img src="/screenshots/detail.png" alt="Detail screenshot" width="742"/>
+<img src="/screenshots/preview.png" alt="Main and Detail screens" width="750"/>
 
 # 🔧 Set up instructions
 
-To get started quickly, run:
+To get started quickly:
 
 1. `npm install`
 2. `npm start`
@@ -17,19 +16,19 @@ To get started quickly, run:
 
 The project has comprehensive tests written in Jest and Playwright.
 
-**To run Jest unit tests,** run:
+**For Jest unit tests,** run:
 
 ```
 npm test:unit
 ```
 
-**To run Playwright end-to-end tests,** run:
+**For Playwright end-to-end tests,** run:
 
 ```
 npm test:e2e
 ```
 
-**To run both tests together,** run:
+**For both tests together,** run:
 
 ```
 npm test

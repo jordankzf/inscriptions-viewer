@@ -113,6 +113,8 @@ export default function Main() {
   };
 
   const handleLookUp = () => {
+    // you need to actually navigate to the new page to update the URL
+    // react-router-dom doesn't support updating the URL without navigating
     navigate(`/${address}`);
     // fetchOrdinalUtxo(address);
   };
