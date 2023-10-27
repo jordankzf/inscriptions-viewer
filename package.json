@@ -22,7 +22,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test:unit": "react-scripts test --watchAll=false",
-    "test:i9n": "playwright test --ui",
+    "test:e2e": "playwright test --ui",
     "test": "react-scripts test --watchAll=false && playwright test"
   },
   "eslintConfig": {
